@@ -1,11 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🍔')
 
-  window.addEventListener('keydown', function(e) {
-    // const audio = document.querySelector(`audio[data-key="${e.keycode}"]`)
-    const audio = document.querySelector('audio')
 
-    console.log('audio', audio)
-    console.log('e.keyCode', e.keyCode)
-  })
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`)
+    if (!audio) return
+    audio.currentTime = 0 // rewinds time to the start with each keyDown
+    audio.play()
+    key.classList.add('playing')
+  }
+
+  function removeTransition(e) {
+    if(e.propertyName !== 'transform') return
+    this.classList.remove('playing ')
+  }
+
+  const keys = document.querySelectorAll('.key')
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition))
+
+
+  window.addEventListener('keydown', playSound)
 })
